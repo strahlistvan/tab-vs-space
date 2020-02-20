@@ -16,11 +16,11 @@ def first_non_whitespace_pos(line):
         return matcher.start()
     return 0
 
-def is_source_code_file(filename):
+def is_source_code_file(filename, allowed_extensions=['c', 'cpp', 'js', 'java', 'php']):
     pos = filename.rfind('.')
     if pos != -1:
         ext = filename[pos+1:]
-        if ext in ['c', 'cpp', 'js', 'java', 'php']:
+        if ext in allowed_extensions:
             return True
     return False
 
@@ -48,7 +48,7 @@ def text_to_tabs(text):
         pos = first_non_whitespace_pos(lines[i])
         line_indent = lines[i][:pos]
         line_content = lines[i][pos:]
-        line_indent = line_indent.replace('    ', '\t')
+        line_indent = line_indent.replace('\t', '    ')
         lines[i] = line_indent + line_content
     return '\n'.join(lines)
 
@@ -59,7 +59,7 @@ def text_to_spaces(text):
         pos = first_non_whitespace_pos(lines[i])
         line_indent = lines[i][:pos]
         line_content = lines[i][pos:]
-        line_indent = line_indent.replace('\t', '    ')
+        line_indent = line_indent.replace('    ', '\t')
         lines[i] = line_indent + line_content
     return '\n'.join(lines)
 

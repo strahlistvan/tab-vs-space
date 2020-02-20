@@ -14,9 +14,12 @@ class Project:
     mixed = 0
     tabbed = 0
     spaced = 0
-    def __init__(self, pathroot):
+    allowed_extensions = []
+    
+    def __init__(self, pathroot, allowed_extensions=['c', 'cpp', 'js', 'java', 'php']):
         self.pathroot = pathroot
         self.sources = []
+        self.allowed_extensions = allowed_extensions
         self.readsourcefiles()
         self.countindentstats()
 
@@ -34,7 +37,7 @@ class Project:
         for root, subdirs, files in os.walk(self.pathroot):
             for filename in files:
                 file_path = os.path.join(root, filename)
-                if util.is_source_code_file(filename):
+                if util.is_source_code_file(filename, allowed_extensions = self.allowed_extensions):
                     src = Source(file_path)
                     self.sources.append(src)
 
@@ -53,7 +56,11 @@ class Project:
     def tospace(self):
         for src in self.sources:
             src = src.tospace()
-    
+
+    def totab(self):
+        for src in self.sources:
+            src = src.totab()
+
     def sourcefilecount(self):
         src_filt = filter(lambda x: util.is_source_code_file(x.path), self.sources)
         return len(list(src_filt))
