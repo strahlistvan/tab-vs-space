@@ -1,65 +1,33 @@
 # -*- coding: utf-8 -*-
 
-import os
 import sys
 sys.path.append('./classes')
-sys.path.append('./utils')
 
-import tab_vs_space_util as util
 import Project as proj 
+
+import configparser
 import matplotlib.pyplot as plt
 
-#recursive list with WALK
-folder_name = '../../workspace-sts-3.9.0.RELEASE\AudioJavaGame'
+# read config file
+config = configparser.ConfigParser()
+config.read('./config.ini')
 
-for root, subdirs, files in os.walk(folder_name):
-    for filename in files:
-        file_path = os.path.join(root, filename)
-        if util.is_source_code_file(filename):
-            source_lines = util.trim(util.read_file(file_path))
+for sect in config.sections():
+    print(config[sect]['root_path'])
 
-#recursive list with function call
-def recursive_list(folder_name):
-    for entry in os.scandir(folder_name):
-        if not entry.is_dir():
-            print(entry.name + ' is not directory')
-            print(entry.path)
-        else:
-            recursive_list(os.path.join(folder_name,entry.name))
+    ext = config[sect]['allowed_extensions'].split(',')
+    project = proj.Project(config[sect]['root_path'], ext)
+    print(project.allowed_extensions)
+    project.countindentstats()
 
-minesweeper = proj.Project('../Minesweeper') #proj.Project('../../workspace-sts-3.9.0.RELEASE\AudioJavaGame') # 
-
-#minesweeper.tospace()
-
-minesweeper.countindentstats()
-print(minesweeper)
-
-ms_arr = [minesweeper.tabbed, minesweeper.spaced, minesweeper.mixed]
-
-labels = ['tabbed', 'spaced', 'mixed']
-
-plt.pie(ms_arr, labels=labels, autopct='%1.1f%%')
-plt.legend(labels, title='Minesweeper')
-plt.show()
-
-print(minesweeper.tabbed)
-print(minesweeper.spaced)
-print(minesweeper.mixed)
-print(minesweeper)
-#############################################
-
-wp = proj.Project('../WordPress')
-
-arr = [wp.tabbed, wp.spaced, wp.mixed]
-
-labels = ['tabbed', 'spaced', 'mixed']
-
-plt.pie(arr, labels=labels, autopct='%1.1f%%')
-plt.legend(labels, title='WordPress')
-plt.show()
-
-print(wp.tabbed)
-print(wp.spaced)
-print(wp.mixed)
-#print(wp.getsourcesbyindent('mixed'))
-
+    indent_arr = [project.tabbed, project.spaced, project.mixed]
+    labels = ['tabbed', 'spaced', 'mixed']
+    
+    plt.pie(indent_arr, labels=labels, autopct='%1.1f%%')
+    plt.legend(labels, title=config[sect]['title'])
+    plt.show()
+    
+    print('tabbed: '+str(project.tabbed))
+    print('spaced: '+str(project.spaced))
+    print('mixed: ' +str(project.mixed))
+    #print(project.getsourcesbyindent('mixed'))

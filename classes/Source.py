@@ -7,11 +7,13 @@ import tab_vs_space_util as util
 class Source:
     path = ''
     sourcecode = []
+
     extension = 'unknown'
     indentstat = 'unknown'
     ratio = 0.0
 
     def __init__(self, path):
+        self.sourcecode = []
         self.path = path
         self.readsourcefrompath()
         self.analyze()
@@ -30,6 +32,11 @@ class Source:
     def tospace(self):
         text = '\n'.join(self.sourcecode)
         self.sourcecode = util.text_to_spaces(text).split('\n')
+        return self.sourcecode
+
+    def totab(self):
+        text = '\n'.join(self.sourcecode)
+        self.sourcecode = util.text_to_tabs(text).split('\n')
         return self.sourcecode
 
     def analyze(self):
