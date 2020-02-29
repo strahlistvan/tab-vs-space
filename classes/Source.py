@@ -12,9 +12,10 @@ class Source:
     indentstat = 'unknown'
     ratio = 0.0
 
-    def __init__(self, path):
+    def __init__(self, path, indent_space_size = 4):
         self.sourcecode = []
         self.path = path
+        self.indent_space_size = indent_space_size
         self.readsourcefrompath()
         self.analyze()
 
@@ -40,6 +41,6 @@ class Source:
         return self.sourcecode
 
     def analyze(self):
-        self.indentstat = util.is_tabbed_or_spaced(self.sourcecode)
+        self.indentstat = util.is_tabbed_or_spaced(self.sourcecode, indent_space_size = self.indent_space_size)
         text = '\n'.join(self.sourcecode)
         self.ratio = util.whitespace_ratio(text)[2]

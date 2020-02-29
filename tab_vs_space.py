@@ -2,6 +2,8 @@
 
 import sys
 sys.path.append('./classes')
+sys.path.append('./utils')
+
 
 import Project as proj 
 
