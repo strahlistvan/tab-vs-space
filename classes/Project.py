@@ -16,10 +16,11 @@ class Project:
     spaced = 0
     allowed_extensions = []
     
-    def __init__(self, pathroot, allowed_extensions=['c', 'cpp', 'js', 'java', 'php']):
+    def __init__(self, pathroot, allowed_extensions=['c', 'cpp', 'js', 'java', 'php'], indent_space_size = 4):
         self.pathroot = pathroot
         self.sources = []
         self.allowed_extensions = allowed_extensions
+        self.indent_space_size = indent_space_size
         self.readsourcefiles()
         self.countindentstats()
 
@@ -38,7 +39,7 @@ class Project:
             for filename in files:
                 file_path = os.path.join(root, filename)
                 if util.is_source_code_file(filename, allowed_extensions = self.allowed_extensions):
-                    src = Source(file_path)
+                    src = Source(file_path, indent_space_size = self.indent_space_size)
                     self.sources.append(src)
 
     def countindentstats(self):

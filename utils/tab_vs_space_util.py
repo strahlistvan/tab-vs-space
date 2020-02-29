@@ -24,7 +24,7 @@ def is_source_code_file(filename, allowed_extensions=['c', 'cpp', 'js', 'java', 
             return True
     return False
 
-def is_tabbed_or_spaced(lines):
+def is_tabbed_or_spaced(lines, indent_space_size = 4):
     lines = trim(lines)
     space_count = 0
     tab_count = 0
@@ -35,31 +35,31 @@ def is_tabbed_or_spaced(lines):
 
     if space_count > tab_count:
         return 'spaced'
-    elif tab_count > 2*space_count:
+    elif tab_count > indent_space_size*space_count:
         return 'tabbed'
     elif tab_count > 0 or space_count > 0:
         return 'mixed'
     return None
 
-def text_to_tabs(text):
+def text_to_tabs(text, indent_space_size = 4):
     lines = text.splitlines()
     lines = trim(lines)
     for i in range(len(lines)):
         pos = first_non_whitespace_pos(lines[i])
         line_indent = lines[i][:pos]
         line_content = lines[i][pos:]
-        line_indent = line_indent.replace('\t', '    ')
+        line_indent = line_indent.replace(indent_space_size*' ', '\t')
         lines[i] = line_indent + line_content
     return '\n'.join(lines)
 
-def text_to_spaces(text):
+def text_to_spaces(text, indent_space_size = 4):
     lines = text.splitlines()
     lines = trim(lines)
     for i in range(len(lines)):
         pos = first_non_whitespace_pos(lines[i])
         line_indent = lines[i][:pos]
         line_content = lines[i][pos:]
-        line_indent = line_indent.replace('    ', '\t')
+        line_indent = line_indent.replace('\t', indent_space_size*' ')
         lines[i] = line_indent + line_content
     return '\n'.join(lines)
 
