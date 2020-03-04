@@ -16,6 +16,12 @@ def first_non_whitespace_pos(line):
         return matcher.start()
     return 0
 
+def get_extension(filename):
+    pos = filename.rfind('.')
+    if pos != -1:
+        return filename[pos+1:]
+    return None
+
 def is_source_code_file(filename, allowed_extensions=['c', 'cpp', 'js', 'java', 'php']):
     pos = filename.rfind('.')
     if pos != -1:

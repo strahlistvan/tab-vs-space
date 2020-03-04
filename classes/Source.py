@@ -42,5 +42,6 @@ class Source:
 
     def analyze(self):
         self.indentstat = util.is_tabbed_or_spaced(self.sourcecode, indent_space_size = self.indent_space_size)
+        self.extension = util.get_extension(self.path)
         text = '\n'.join(self.sourcecode)
         self.ratio = util.whitespace_ratio(text)[2]
