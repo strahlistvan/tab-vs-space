@@ -78,4 +78,6 @@ def whitespace_ratio(text):
     for line in lines:
         space_len += first_non_whitespace_pos(line)
         text_len += len(line)
+    if text_len == 0:
+        return (0, 0, 0)
     return (text_len, space_len, space_len/text_len)

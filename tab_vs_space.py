@@ -16,6 +16,9 @@ all_mixed  = 0
 
 all_sources_by_ext = dict()
 
+import pandas as pd
+sourceData = pd.DataFrame()
+
 # read config file
 config = configparser.ConfigParser()
 config.read('./config.ini')
@@ -29,10 +32,12 @@ for sect in config.sections():
     project.countindentstats()
 
     indent_arr = [project.tabbed, project.spaced, project.mixed]
-    labels = ['tabbed', 'spaced', 'mixed']
-    
+    labels = ['tabbed ('+str(project.tabbed)+')'
+             ,'spaced ('+str(project.spaced)+')'
+             ,'mixed ('+str(project.mixed)+')']
+
     plt.pie(indent_arr, labels=labels, autopct='%1.1f%%')
-    plt.legend(labels, title=config[sect]['title'])
+    plt.legend(labels, title=config[sect]['title'], loc='upper right')
     plt.show()
 
     all_tabbed += project.tabbed
@@ -45,11 +50,23 @@ for sect in config.sections():
     #print(project.getsourcesbyindent('mixed'))
 
     for ext in project.used_extensions:
+       # print(project.sources_by_ext[ext])
         if ext in all_sources_by_ext:
             all_sources_by_ext[ext].extend(project.sources_by_ext[ext])
         else:
             all_sources_by_ext[ext] = project.sources_by_ext[ext]
 
-print(all_sources_by_ext)
-for src_list in all_sources_by_ext:
-    print(len(src_list))
+    for source in project.sources:
+        this_src_df = pd.DataFrame({'path': source.path, 'ext': source.extension, 'indentstat': source.indentstat, 'project': project.pathroot}, index=[0])
+        sourceData = sourceData.append(this_src_df)
+
+# Summarize sources by file extension
+#print(all_sources_by_ext)
+
+print(sourceData.to_string())
+
+#for ext in all_sources_by_ext:
+   # print(ext)
+   # for src in all_sources_by_ext[ext]:
+   #     print(src.path)
+   #     print(src.indentstat)

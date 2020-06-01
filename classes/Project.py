@@ -39,6 +39,7 @@ class Project:
 
     def readsourcefiles(self):
         for root, subdirs, files in os.walk(self.pathroot):
+            subdirs[:] = [d for d in subdirs if d not in ['.git', '.github']] #exclude
             for filename in files:
                 file_path = os.path.join(root, filename)
                 if util.is_source_code_file(filename, allowed_extensions = self.allowed_extensions):
