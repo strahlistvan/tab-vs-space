@@ -15,11 +15,17 @@ class Project:
     tabbed = 0
     spaced = 0
     allowed_extensions = []
-    
+    used_extensions = set()
+
     def __init__(self, pathroot, allowed_extensions=['c', 'cpp', 'js', 'java', 'php'], indent_space_size = 4):
+        print('Initet hívjuk itt')
+        self.tabbed = 0
+        self.mixed  = 0
+        self.spaced = 0
         self.pathroot = pathroot
-        self.sources = []
+        self.sources = [] #sources
         self.allowed_extensions = allowed_extensions
+        self.used_extensions = set()
         self.indent_space_size = indent_space_size
         self.readsourcefiles()
         self.countindentstats()
@@ -36,11 +42,13 @@ class Project:
 
     def readsourcefiles(self):
         for root, subdirs, files in os.walk(self.pathroot):
+            subdirs[:] = [d for d in subdirs if d not in ['.git', '.github']] #exclude
             for filename in files:
                 file_path = os.path.join(root, filename)
                 if util.is_source_code_file(filename, allowed_extensions = self.allowed_extensions):
                     src = Source(file_path, indent_space_size = self.indent_space_size)
                     self.sources.append(src)
+                    self.used_extensions.add(src.extension)
 
     def countindentstats(self):
         if len(self.sources) == 0:

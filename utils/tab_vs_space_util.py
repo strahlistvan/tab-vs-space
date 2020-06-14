@@ -16,6 +16,12 @@ def first_non_whitespace_pos(line):
         return matcher.start()
     return 0
 
+def get_extension(filename):
+    pos = filename.rfind('.')
+    if pos != -1:
+        return filename[pos+1:]
+    return None
+
 def is_source_code_file(filename, allowed_extensions=['c', 'cpp', 'js', 'java', 'php']):
     pos = filename.rfind('.')
     if pos != -1:
@@ -72,4 +78,6 @@ def whitespace_ratio(text):
     for line in lines:
         space_len += first_non_whitespace_pos(line)
         text_len += len(line)
+    if text_len == 0:
+        return (0, 0, 0)
     return (text_len, space_len, space_len/text_len)
