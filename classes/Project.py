@@ -16,11 +16,14 @@ class Project:
     spaced = 0
     allowed_extensions = []
     used_extensions = set()
-    sources_by_ext = dict()
-    
-    def __init__(self, pathroot, allowed_extensions=['c', 'cpp', 'js', 'java', 'php'], indent_space_size = 4, sources = []):
+
+    def __init__(self, pathroot, allowed_extensions=['c', 'cpp', 'js', 'java', 'php'], indent_space_size = 4):
+        print('Initet hívjuk itt')
+        self.tabbed = 0
+        self.mixed  = 0
+        self.spaced = 0
         self.pathroot = pathroot
-        self.sources = sources
+        self.sources = [] #sources
         self.allowed_extensions = allowed_extensions
         self.used_extensions = set()
         self.indent_space_size = indent_space_size
@@ -46,10 +49,6 @@ class Project:
                     src = Source(file_path, indent_space_size = self.indent_space_size)
                     self.sources.append(src)
                     self.used_extensions.add(src.extension)
-                    if src.extension in self.sources_by_ext:
-                        self.sources_by_ext[src.extension].append(src)
-                    else:
-                        self.sources_by_ext[src.extension] = [src]
 
     def countindentstats(self):
         if len(self.sources) == 0:

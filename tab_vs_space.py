@@ -4,24 +4,22 @@ import sys
 sys.path.append('./classes')
 sys.path.append('./utils')
 
-
 import Project as proj 
 
 import configparser
 import matplotlib.pyplot as plt
+import pandas as pd
 
 all_tabbed = 0
 all_spaced = 0
 all_mixed  = 0
 
 all_sources_by_ext = dict()
-
-import pandas as pd
-sourceData = pd.DataFrame()
+source_df = pd.DataFrame()
 
 # read config file
 config = configparser.ConfigParser()
-config.read('./config.ini')
+config.read('./config_m.ini')
 
 for sect in config.sections():
     print(config[sect]['root_path'])
@@ -40,33 +38,18 @@ for sect in config.sections():
     plt.legend(labels, title=config[sect]['title'], loc='upper right')
     plt.show()
 
-    all_tabbed += project.tabbed
-    all_spaced += project.spaced
-    all_mixed  += project.mixed
+    all_tabbed = all_tabbed + project.tabbed
+    all_spaced = all_spaced + project.spaced
+    all_mixed  = all_mixed + project.mixed
 
     print('tabbed: '+str(project.tabbed))
     print('spaced: '+str(project.spaced))
     print('mixed: ' +str(project.mixed))
-    #print(project.getsourcesbyindent('mixed'))
 
-    for ext in project.used_extensions:
-       # print(project.sources_by_ext[ext])
-        if ext in all_sources_by_ext:
-            all_sources_by_ext[ext].extend(project.sources_by_ext[ext])
-        else:
-            all_sources_by_ext[ext] = project.sources_by_ext[ext]
-
-    for source in project.sources:
-        this_src_df = pd.DataFrame({'path': source.path, 'ext': source.extension, 'indentstat': source.indentstat, 'project': project.pathroot}, index=[0])
-        sourceData = sourceData.append(this_src_df)
+    # Add source files to a DataFrame for easier data filtering and aggregation
+    for src in project.sources:
+        source_df = source_df.append({'path': src.path, 'extension': src.extension, 'indent type': src.indentstat, 'project': project.pathroot}, ignore_index=True)
 
 # Summarize sources by file extension
-#print(all_sources_by_ext)
-
-print(sourceData.to_string())
-
-#for ext in all_sources_by_ext:
-   # print(ext)
-   # for src in all_sources_by_ext[ext]:
-   #     print(src.path)
-   #     print(src.indentstat)
+grouped_df = pd.crosstab(source_df['extension'], source_df['indent type'])
+grouped_df.plot.bar()
